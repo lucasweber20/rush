@@ -31,7 +31,6 @@ def requests(ip, port):
         if result == 0:
              print(f"Open: {port}")
         s.close()
-        print(result)
         return result
     except:
         pass
