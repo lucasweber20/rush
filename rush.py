@@ -15,12 +15,12 @@ args = parser.parse_args()
 def main():
     if args.ip:
         if "-" in args.port[0]:
-            scan_multiples_hosts(args.ip, args.port[0])
-        scan_host(args.ip, args.port)
+            scan_multiples_ports(args.ip, args.port[0])
+        scan_port(args.ip, args.port)
     elif args.list:
         if "-" in args.port[0]:
-            scan_multiples_hosts(args.ip, args.port[0])
-        scan_host(args.list, args.port)
+            scan_multiples_ports(args.ip, args.port[0])
+        scan_port(args.list, args.port)
 
 def requests(ip, port):
     try:
@@ -40,7 +40,7 @@ def read_file(file):
         hostnames.append(hostname_url.netloc)
     return hostnames
 
-def scan_host(ip, port):
+def scan_port(ip, port):
     if args.ip:
         try:
             result = requests(ip, int(port[0]))
@@ -56,7 +56,7 @@ def scan_host(ip, port):
                 if result == 0:
                     print(f"\033[92mOpen: {port[0]}\033[00m")
 
-def scan_multiples_hosts(ip, port):
+def scan_multiples_ports(ip, port):
     regex_ports = re.findall(r"(\d+)(?:-(\d+))?", port)
     start_port = int(regex_ports[0][0])
     end_port = int(regex_ports[0][1])
