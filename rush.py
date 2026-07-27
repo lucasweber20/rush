@@ -29,8 +29,9 @@ def requests(ip, port):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         socket.setdefaulttimeout(10)
         result = s.connect_ex((ip, port))
+        print(f"===== \033[92m{ip}\033[00m =====")
         if result == 0:
-             print(f"Open: {port}")
+             print(f"\033[92mOpen: {port}\033[00m")
         s.close()
         return result
     except:
@@ -46,7 +47,6 @@ def scan_port(ip, port):
         hostnames = read_file(args.list)
         for host in hostnames:
             try:
-                print(f"===== {host} =====")
                 requests(host, int(port[0]))
             except:
                 continue
@@ -62,7 +62,6 @@ def scan_multiples_ports(ip, port):
         elif args.list:
                 hostnames = read_file(args.list)
                 for host in hostnames:
-                        print(f"===== {host} =====")
                         requests(host, ports)
 
 def read_file(file):
