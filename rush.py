@@ -3,6 +3,7 @@ import threading
 import re
 import argparse
 from urllib.parse import urlsplit
+import time
 
 
 parser = argparse.ArgumentParser()
@@ -29,19 +30,12 @@ def requests(ip, port):
         socket.setdefaulttimeout(10)
         result = s.connect_ex((ip, port))
         if result == 0:
+             time.sleep(5)
              print(f"Open: {port}")
         s.close()
         return result
     except:
         pass
-
-def read_file(file):
-    hostnames = []
-    urls = open(file, encoding="utf-8").read().splitlines()
-    for url in urls:
-        hostname_url = urlsplit(url)
-        hostnames.append(hostname_url.netloc)
-    return hostnames
 
 def scan_port(ip, port):
     if args.ip:
@@ -69,7 +63,18 @@ def scan_multiples_ports(ip, port):
         elif args.list:
                 hostnames = read_file(args.list)
                 for host in hostnames:
-                        requests(host, ports)
+                        print(host)
+                        thread = threading.Thread(target=requests, args=(host, ports))
+                        thread.start()
+
+def read_file(file):
+    hostnames = []
+    urls = open(file, encoding="utf-8").read().splitlines()
+    for url in urls:
+        hostname_url = urlsplit(url)
+        if hostname_url.netloc not in hostnames:
+            hostnames.append(hostname_url.netloc)
+    return hostnames
 
 if __name__ == "__main__":
     main()
