@@ -36,8 +36,9 @@ def scan(ip, port):
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 socket.setdefaulttimeout(5)
                 result = s.connect_ex((ips, port))
+                print(f"===== {ips} =====")
                 if result == 0:
-                    print(f"\033[92m{ips} -> {port} is open!!!\033[00m")
+                    print(f"\033[92mOpen: {port}\033[00m")
                 s.close()
             except:
                 pass
