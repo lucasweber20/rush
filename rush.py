@@ -1,6 +1,5 @@
 import socket
 import argparse
-import sys
 
 
 parser = argparse.ArgumentParser()
@@ -15,27 +14,33 @@ args = parser.parse_args()
 
 def main():
     if args.ip:
-        result = scan(args.ip)
+        result = scan(args.ip, args.port)
     elif args.list:
-        result = scan(args.list)
+        result = scan(args.list, args.port)
 
-def scan(ip):
+def scan(ip, port):
     if args.ip:
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             socket.setdefaulttimeout(5)
-            result = s.connect_ex((args.ip, args.port))
+            result = s.connect_ex((ip, port))
             if result == 0:
-                print(f"{args.port} is open!!!")
+                print(f"\033[92m{port} is open!!!\033[00m")
             s.close()
-        except KeyboardInterrupt:
-            print("Exiting programa!")
-            sys.exit()
-        except socket.error:
-            print("Server not responding!")
-            sys.exit()
+        except:
+            pass
     elif args.list:
-        pass
+        file = open(args.list, encoding="utf-16").read().splitlines()
+        for ips in file:
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                socket.setdefaulttimeout(5)
+                result = s.connect_ex((ips, port))
+                if result == 0:
+                    print(f"\033[92m{ips} -> {port} is open!!!\033[00m")
+                s.close()
+            except:
+                pass
 
 if __name__ == "__main__":
     main()
