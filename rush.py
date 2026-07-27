@@ -30,7 +30,6 @@ def requests(ip, port):
         socket.setdefaulttimeout(10)
         result = s.connect_ex((ip, port))
         if result == 0:
-             time.sleep(5)
              print(f"Open: {port}")
         s.close()
         return result
@@ -63,9 +62,8 @@ def scan_multiples_ports(ip, port):
         elif args.list:
                 hostnames = read_file(args.list)
                 for host in hostnames:
-                        print(host)
-                        thread = threading.Thread(target=requests, args=(host, ports))
-                        thread.start()
+                        print(f"===== {host} =====")
+                        requests(host, ports)
 
 def read_file(file):
     hostnames = []
