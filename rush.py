@@ -23,28 +23,29 @@ def main():
             scan_multiples_ports(args.ip, args.port[0])
         scan_port(args.list, args.port)
 
+def requests(ip, port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    socket.setdefaulttimeout(10)
+    result = s.connect_ex((ip, port))
+    s.close()
+    return result
+
 def scan_port(ip, port):
     if args.ip:
         try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            socket.setdefaulttimeout(10)
-            result = s.connect_ex((ip, int(port[0])))
+            result = requests(ip, int(port[0]))
             if result == 0:
-                print(f"\033[92m{port[0]} is open!!!\033[00m")
-            s.close()
+                print(f"\033[92mOpen: {port[0]}\033[00m")
         except:
             pass
     elif args.list:
         file = open(args.list, encoding="utf-16").read().splitlines()
         for ips in file:
             try:
-                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                socket.setdefaulttimeout(10)
-                result = s.connect_ex((ips, int(port[0])))
+                result = requests(ips, int(port[0]))
                 print(f"===== {ips} =====")
                 if result == 0:
                     print(f"\033[92mOpen: {port[0]}\033[00m")
-                s.close()
             except:
                 pass
 
@@ -56,24 +57,18 @@ def scan_multiples_ports(ip, port):
     for ports in range(start_port, end_port+1):
         if args.ip:
             try:
-                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                socket.setdefaulttimeout(10)
-                result = s.connect_ex((ip, ports))
+                result = requests(ip, ports)
                 if result == 0:
                     print(f"\033[92mOpen: {ports}\033[00m")
-                s.close()
             except:
                 pass
         elif args.list:
             file = open(args.list, encoding="utf-16").read().splitlines()
             for ips in file:
                 try:
-                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    socket.setdefaulttimeout(10)
-                    result = s.connect_ex((ips, ports))
+                    result = requests(ips, ports)
                     if result == 0:
                         print(f"\033[92mOpen: {ports}\033[00m")
-                    s.close()
                 except:
                     pass
 
