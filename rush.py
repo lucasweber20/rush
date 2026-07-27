@@ -1,4 +1,5 @@
 import socket
+import threading
 import re
 import argparse
 from urllib.parse import urlsplit
@@ -27,7 +28,10 @@ def requests(ip, port):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         socket.setdefaulttimeout(10)
         result = s.connect_ex((ip, port))
+        if result == 0:
+             print(f"Open: {port}")
         s.close()
+        print(result)
         return result
     except:
         pass
@@ -43,19 +47,18 @@ def read_file(file):
 def scan_port(ip, port):
     if args.ip:
         try:
-            result = requests(ip, int(port[0]))
-            if result == 0:
-                print(f"\033[92mOpen: {port[0]}\033[00m")
+            requests(ip, int(port[0]))
         except:
             pass
     elif args.list:
         hostnames = read_file(args.list)
         for host in hostnames:
-                result = requests(host, int(port[0]))
+            try:
                 print(f"===== {host} =====")
-                if result == 0:
-                    print(f"\033[92mOpen: {port[0]}\033[00m")
-
+                requests(host, int(port[0]))
+            except:
+                continue
+                
 def scan_multiples_ports(ip, port):
     regex_ports = re.findall(r"(\d+)(?:-(\d+))?", port)
     start_port = int(regex_ports[0][0])
@@ -63,15 +66,11 @@ def scan_multiples_ports(ip, port):
 
     for ports in range(start_port, end_port+1):
         if args.ip:
-                result = requests(ip, ports)
-                if result == 0:
-                    print(f"\033[92mOpen: {ports}\033[00m")
+                requests(ip, ports)
         elif args.list:
                 hostnames = read_file(args.list)
                 for host in hostnames:
-                        result = requests(host, ports)
-                        if result == 0:
-                            print(f"\033[92mOpen: {ports}\033[00m")
+                        requests(host, ports)
 
 if __name__ == "__main__":
     main()
