@@ -1,9 +1,7 @@
 import socket
-import threading
 import re
 import argparse
 from urllib.parse import urlsplit
-import time
 
 
 parser = argparse.ArgumentParser()
