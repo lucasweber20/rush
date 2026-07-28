@@ -14,11 +14,11 @@ args = parser.parse_args()
 
 def main():
     if args.ip:
-        if "-" in args.port[0]:
+        if "-" in args.port[0] or "," in args.port[0]:
             scan_multiples_ports(args.ip, args.port[0])
         scan_port(args.ip, args.port)
     elif args.list:
-        if "-" in args.port[0]:
+        if "-" in args.port[0] or "," in args.port[0]:
             scan_multiples_ports(args.ip, args.port[0])
         scan_port(args.list, args.port)
 
@@ -27,7 +27,6 @@ def requests(ip, port):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         socket.setdefaulttimeout(10)
         result = s.connect_ex((ip, port))
-        print(f"===== \033[92m{ip}\033[00m =====")
         if result == 0:
              print(f"\033[92mOpen: {port}\033[00m")
         s.close()
@@ -36,6 +35,7 @@ def requests(ip, port):
         pass
 
 def scan_port(ip, port):
+    print(f"===== \033[92m{ip}\033[00m =====")
     if args.ip:
         try:
             requests(ip, int(port[0]))
@@ -50,17 +50,28 @@ def scan_port(ip, port):
                 continue
                 
 def scan_multiples_ports(ip, port):
-    regex_ports = re.findall(r"(\d+)(?:-(\d+))?", port)
-    start_port = int(regex_ports[0][0])
-    end_port = int(regex_ports[0][1])
+    print(f"===== \033[92m{ip}\033[00m =====")
+    if "-" in port:
+        regex_ports = re.findall(r"(\d+)(?:-(\d+))?", port)
+        start_port = int(regex_ports[0][0])
+        end_port = int(regex_ports[0][1])
 
-    for ports in range(start_port, end_port+1):
-        if args.ip:
-                requests(ip, ports)
-        elif args.list:
+        for ports in range(start_port, end_port+1):
+            if args.ip:
+                    requests(ip, ports)
+            elif args.list:
+                    hostnames = read_file(args.list)
+                    for host in hostnames:
+                            requests(host, ports)
+    elif "," in port:
+        regex_ports = re.findall(r'(\d+)[^,]?+', port)
+        for ports in regex_ports:
+            if args.ip:
+                requests(ip, int(ports))
+            elif args.list:
                 hostnames = read_file(args.list)
                 for host in hostnames:
-                        requests(host, ports)
+                    requests(host, int(ports))
 
 def read_file(file):
     hostnames = []
