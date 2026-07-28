@@ -28,7 +28,12 @@ def requests(ip, port):
         socket.setdefaulttimeout(10)
         result = s.connect_ex((ip, port))
         if result == 0:
-             print(f"\033[92mOpen: {port}\033[00m")
+            print(f"\033[92mOpen: {port}\033[00m")
+            try:
+                banner = s.recv(1028).decode().strip()
+                print(banner)
+            except:
+                pass
         s.close()
         return result
     except:
