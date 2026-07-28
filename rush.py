@@ -16,11 +16,13 @@ def main():
     if args.ip:
         if "-" in args.port[0] or "," in args.port[0]:
             scan_multiples_ports(args.ip, args.port[0])
-        scan_port(args.ip, args.port)
+        else:
+            scan_port(args.ip, args.port)
     elif args.list:
         if "-" in args.port[0] or "," in args.port[0]:
             scan_multiples_ports(args.ip, args.port[0])
-        scan_port(args.list, args.port)
+        else:
+            scan_port(args.list, args.port)
 
 def requests(ip, port):
     try:
@@ -29,11 +31,6 @@ def requests(ip, port):
         result = s.connect_ex((ip, port))
         if result == 0:
             print(f"\033[92mOpen: {port}\033[00m")
-            try:
-                banner = s.recv(1028).decode().strip()
-                print(banner)
-            except:
-                pass
         s.close()
         return result
     except:
@@ -55,27 +52,33 @@ def scan_port(ip, port):
                 continue
                 
 def scan_multiples_ports(ip, port):
-    print(f"===== \033[92m{ip}\033[00m =====")
     if "-" in port:
         regex_ports = re.findall(r"(\d+)(?:-(\d+))?", port)
         start_port = int(regex_ports[0][0])
         end_port = int(regex_ports[0][1])
 
-        for ports in range(start_port, end_port+1):
-            if args.ip:
-                    requests(ip, ports)
-            elif args.list:
-                    hostnames = read_file(args.list)
-                    for host in hostnames:
-                            requests(host, ports)
+        if args.ip:
+            print(f"===== \033[92m{ip}\033[00m =====")
+            for ports in range(start_port, end_port+1):
+                requests(ip, ports)
+        elif args.list:
+            hostnames = read_file(args.list)
+            for host in hostnames:
+                print(f"===== \033[92m{host}\033[00m =====")
+                for ports in range(start_port, end_port+1):
+                    requests(host, ports)
+    
     elif "," in port:
         regex_ports = re.findall(r'(\d+)[^,]?+', port)
-        for ports in regex_ports:
-            if args.ip:
+
+        if args.ip:
+            for ports in regex_ports:
                 requests(ip, int(ports))
-            elif args.list:
-                hostnames = read_file(args.list)
-                for host in hostnames:
+        elif args.list:
+            hostnames = read_file(args.list)
+            for host in hostnames:
+                print(f"===== \033[92m{host}\033[00m =====")
+                for ports in regex_ports:
                     requests(host, int(ports))
 
 def read_file(file):
