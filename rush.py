@@ -37,15 +37,16 @@ def requests(ip, port):
         pass
 
 def scan_port(ip, port):
-    print(f"===== \033[92m{ip}\033[00m =====")
     if args.ip:
         try:
+            print(f"===== \033[92m{ip}\033[00m =====")
             requests(ip, int(port[0]))
         except:
             pass
     elif args.list:
         hostnames = read_file(args.list)
         for host in hostnames:
+            print(f"===== \033[92m{host}\033[00m =====")
             try:
                 requests(host, int(port[0]))
             except:
@@ -70,7 +71,6 @@ def scan_multiples_ports(ip, port):
     
     elif "," in port:
         regex_ports = re.findall(r'(\d+)[^,]?+', port)
-
         if args.ip:
             for ports in regex_ports:
                 requests(ip, int(ports))
