@@ -10,8 +10,10 @@ class Parser:
             for port in self.port.split(","):
                 ports_parsed.append(port)
         elif "-" in self.port:
+            list_range = []
             for port in self.port.split('-'):
-                ports_parsed.append(port)
+                list_range.append(int(port))
+            ports_parsed = list(range(list_range[0], list_range[1]+1))
         else:
             ports_parsed.append(self.port)
         return ports_parsed
