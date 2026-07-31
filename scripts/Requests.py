@@ -6,12 +6,11 @@ class Requests:
         pass
 
     def requests(self, host, port):
-        port = int(port[0])
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             socket.setdefaulttimeout(10)
-            result = s.connect_ex((host, port))
+            result = s.connect_ex((host, int(port)))
             s.close()
-            return result
+            return result, port
         except:
             pass
