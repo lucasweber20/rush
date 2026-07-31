@@ -8,7 +8,6 @@ parser = argparse.ArgumentParser()
 
 args = parser.add_argument("-ip", "--ip", help='Set ip, example: -ip 192.168.0.100', type=str)
 args = parser.add_argument("-p", "--port", help="Specify port to scan, example: -p 22, 1-100 or 80,443", type=str)
-args = parser.add_argument("-l", "--list", help="Specify list ip, example: -l ips.txt", type=str)
 args = parser.add_argument("-t", "--thread", help="Specify threads number, example: -t 5", default=1, type=int)
 
 args = parser.parse_args()
@@ -18,7 +17,6 @@ def main():
     host = args.ip
     port = args.port
     thread = args.thread
-    hosts = args.list
 
     # Parser
     ports = Parser(port)
