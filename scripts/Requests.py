@@ -7,7 +7,6 @@ class Requests:
 
     def requests(self, host, port):
         try:
-            print(port)
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             socket.setdefaulttimeout(3)
             result = s.connect_ex((host, int(port)))
