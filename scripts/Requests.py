@@ -1,4 +1,5 @@
 import socket
+import subprocess
 
 
 class Requests:
@@ -14,3 +15,13 @@ class Requests:
             return result, port
         except:
             pass
+
+    def scan_hosts(self):
+        active_hosts = []
+        for num in range(0, 256):
+            ip = f"192.168.0.{num}"
+            res = subprocess.run(["ping", ip, "-n", "1"], capture_output=True, text=True)
+            if "TTL" in res.stdout:
+                active_hosts.append(ip)
+        return active_hosts
+            

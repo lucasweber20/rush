@@ -20,6 +20,15 @@ def main():
     thread = args.thread
     scan_hosts = args.si
 
+    # Search host
+    if scan_hosts:
+        host = Requests()
+        hosts = host.scan_hosts()
+        if hosts:
+            for ip in hosts:
+                print(f"\033[92m{ip}\033[00m")
+        exit()
+
     # Parser
     ports = Parser(port)
     ports_list = ports.parser()
