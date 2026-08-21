@@ -42,12 +42,13 @@ def main():
     # Requests
     req = Requests()
     with concurrent.futures.ThreadPoolExecutor(max_workers=thread) as executor:
-        futures = [executor.submit(req.requests, *args) for args in itertools.product(host, ports_list)]
-        for future in concurrent.futures.as_completed(futures):
-            result = future.result()
-            if result[0] == 0:
-                print(f"==== \033[92m{result[2]}\033[00m =====")
-                print(f"\033[92mOpen: {result[1]}\033[00m")
+        for h in host:
+            print(f"===== \033[92m{h}\033[00m =====")
+            futures = [executor.submit(req.requests, h, ports) for ports in ports_list]
+            for future in concurrent.futures.as_completed(futures):
+                    result = future.result()
+                    if result[0] == 0:
+                        print(f"\033[92mOpen: {result[1]}\033[00m")
 
 if __name__ == "__main__":
     main()
