@@ -15,7 +15,6 @@ args = parser.add_argument("-si", help="Search for hosts, example: -si", action=
 args = parser.parse_args()
 
 def main():
-    # Flags
     host = args.ip
     file = args.file
     port = args.port
@@ -25,7 +24,6 @@ def main():
     if file:
         host = open(file, 'r').read().splitlines()
 
-    # Search host
     if scan_hosts:
         host = Requests()
         hosts = host.scan_hosts()
@@ -34,11 +32,9 @@ def main():
                 print(f"\033[92m{ip}\033[00m")
         exit()
 
-    # Parser
     ports = Parser(port)
     ports_list = ports.parser()
     
-    # Requests
     req = Requests()
     with concurrent.futures.ThreadPoolExecutor(max_workers=thread) as executor:
         for h in host:
