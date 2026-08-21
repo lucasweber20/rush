@@ -1,6 +1,5 @@
 import concurrent.futures
 import argparse
-import itertools
 from scripts.Requests import Requests
 from scripts.Parser import Parser
 
@@ -47,7 +46,7 @@ def main():
             futures = [executor.submit(req.requests, h, ports) for ports in ports_list]
             for future in concurrent.futures.as_completed(futures):
                     result = future.result()
-                    if result[0] == 0:
+                    if result:
                         print(f"\033[92mOpen: {result[1]}\033[00m")
 
 if __name__ == "__main__":
